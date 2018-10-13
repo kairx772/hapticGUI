@@ -1,57 +1,56 @@
-#!/usr/bin/env python
-
-from Tkinter import Tk, Frame, Button, Label, Entry
+#!/usr/bin/env python3
+import tkinter as tk
 import serial as ser
-ser1 = ser.Serial('/dev/ttyUSB0',9600)
+
+#ser1 = ser.Serial('/dev/ttyUSB0',9600)
 #ser1.write('s')
 
-class Example(Frame):
-    def __init__(self, parent=None):
-        Frame.__init__(self, parent)
-        self.pack()
-        self.createWidgets()
+class MainApplication(tk.Frame):
+    def __init__(self, master):
+        self.master = master
+        tk.Frame.__init__(self, self.master)
+        #self.pack()
+        #self.init_window()
+        self.configure_gui()
+        self.create_widgets()
+
+    def configure_gui(self):
+        self.master.title('hapticmouse_GUI')
+        self.master.geometry('1000x1000')
+        #self.master.resizable(0, 0)
+
+    def create_widgets(self):
+        self.create_buttons()
+        self.create_squareframe()
+
+    # Creating the square frame
+    def create_squareframe(self):
+        self.square_frame = tk.Frame(width=100, height=100, background='red')
+        self.square_frame.grid(column=0, row=0)
+
+        #self.left_frame = tk.Frame(width=100, height=100, background='red')
+        #self.left_frame.grid_propagate(0)
+        #self.square_frame.grid(row=0, column=0)
+
+
+    def create_buttons(self):
+        self.button1 = tk.Button(text='Button1')
+        self.button1.config( height = 5, width = 10 )
+        self.button1["command"] = self.say_hi
+        self.button1.bind("<Enter>", self.on_enter) 
+        self.button1.img = ''
+        #self.button1.config(height=100, width=100, image=button1.img, compound=CENTER)      
+        self.button1.place(x=600, y=400)
+
 
     def say_hi(self):
-        print "hi there, hello world! "
-
-    def say_halo(self):
-        print "Moin! Guten Tag! "
-
-    def createWidgets(self):
-        self.master.title("hapticGUI")
-
-        self.QUIT = Button(self)
-        self.QUIT["text"] = "QUIT"
-        self.QUIT["fg"]   = "red"
-        self.QUIT["command"] =  self.quit
-        self.QUIT.pack({"side": "left"})
-
-        self.hi_there = Button(self)
-        self.hi_there["text"] = "Hello",
-        self.hi_there["command"] = self.say_hi
-        self.hi_there.bind("<Enter>", self.on_enter)
-        #self.hi_there.bind("<Leave>", self.on_leave)
-        self.hi_there.pack({"side": "left"})
-
-        self.guten_tag = Button(self)
-        self.guten_tag["text"] = "GutenTag",
-        self.guten_tag["command"] = self.say_halo
-        self.guten_tag.pack({"side": "left"})
+        print ('hi there, hello world! ')
 
     def on_enter(self, event):
-        print "bzzzzzzzzzz~ "
-        ser1.write('s')
+        print ('bzzzzzzzzzz~ ')
+        #ser1.write('s')
 
-    #def on_leave(self, enter):
-        #print "bzzzzzzzzzz~ "
-
-def main():
-    root = Tk()
-    app = Example(parent=root)
-    root.lift()
-    root.call('wm', 'attributes', '.', '-topmost', True)
-    root.after_idle(root.call, 'wm', 'attributes', '.', '-topmost', False)
-    root.geometry("1200x800")
-    app.mainloop()
-
-main()
+if __name__ == '__main__':
+   root = tk.Tk()
+   main_app =  MainApplication(root)
+   root.mainloop()
