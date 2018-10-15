@@ -20,7 +20,6 @@ class MainApplication(tk.Frame):
         #self.master.resizable(0, 0)
 
     def create_widgets(self):
-        self.create_buttons()
         self.create_squareframe()
 
     # Creating the square frame
@@ -28,7 +27,7 @@ class MainApplication(tk.Frame):
         self.square_frame = tk.Frame(width=100, height=100, background='red')
         self.square_frame.grid(column=0, row=0)
         self.square_frame.bind("<Enter>", self.on_enter)
-        self.square_frame.bind("<Button-2>", self.say_hi)
+        self.square_frame.bind("<Button-1>", self.leftclick)
         self.square_frame.place(x=200, y=200)
         #self.square_frame.pack(expand=True, fill=tk.BOTH)
         #self.left_frame = tk.Frame(width=100, height=100, background='red')
