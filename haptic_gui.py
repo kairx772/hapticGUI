@@ -9,7 +9,6 @@ import random
 
 
 
-
 class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -57,7 +56,7 @@ class StartPage(tk.Frame):
         button1 = tk.Button(self, text="Go to Page One",
                             command=lambda: controller.show_frame("PageOne"))
         button2 = tk.Button(self, text="Destroy",
-                            command=lambda: square_frame.destroy(self))
+                            command=lambda: PageTwo.removethis(self))
         button1.pack()
         button2.pack()
 
@@ -80,7 +79,7 @@ class PageOne(tk.Frame):
 
     def create_squareframe(self):
         targetsize = random.randint(5,100)
-        self.square_frame = tk.Frame(width=targetsize, height=targetsize, background='red')
+        self.square_frame = tk.Frame(width=targetsize, height=targetsize, background='yellow')
         #self.square_frame.grid(column=0, row=0)
         self.square_frame.bind("<Enter>", self.on_enter)
         self.square_frame.bind("<Button-1>", lambda: controller.show_frame("PageTwo"))
@@ -100,11 +99,17 @@ class PageTwo(tk.Frame):
         button1 = tk.Button(self, text="Go to the page1",
                            command=lambda: controller.show_frame("PageOne"))
         button2 = tk.Button(self, text="Go to the start page",
-                           command=lambda: controller.show_frame("StartPage"))        
+                           command=lambda: controller.show_frame("StartPage"))
+        button3 = tk.Button(self, text="Destroy",
+                           command=lambda: self.removethis())
+        button4 = tk.Button(self, text="Create",
+                           command=lambda: self.creatthis())       
         self.create_squareframe()
-        create_squareframe_fn(self)
+
         button1.pack()
         button2.pack()
+        button3.pack()
+        button4.pack()
     def create_squareframe(self):
         targetsize = random.randint(5,100)
         self.square_frame = tk.Frame(width=targetsize, height=targetsize, background='red')
@@ -112,12 +117,18 @@ class PageTwo(tk.Frame):
         self.square_frame.bind("<Enter>", self.on_enter)
         self.square_frame.bind("<Button-1>", lambda: controller.show_frame("PageTwo"))
         self.square_frame.place(x=random.randint(30,450), y=random.randint(30,500))
-
+        #self.square_frame.destroy()
     def on_enter(self, event):
         print ('bzzzzzzzzzz~ ')
         #ser1.write('s')
+    def removethis(self):
+        self.square_frame.destroy()
+    def creatthis(self):
+        self.create_squareframe()
 
 
+
+'''
 def create_squareframe_fn(self):
     targetsize = random.randint(5,100)
     square_frame = tk.Frame(width=targetsize, height=targetsize, background='green')
@@ -129,7 +140,7 @@ def create_squareframe_fn(self):
 def on_enter_fn():
     print ('bzzzzzzzzzzlalalalallalal~ ')
     #ser1.write('s')
-
+'''
 '''
 class SquareFrame(tk.Tk):
 
