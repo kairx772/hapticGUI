@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import font  as tkfont
 import random
-import serial as ser
+#import serial as ser
 #from Xlib import display
 import time
 
@@ -11,10 +11,18 @@ import time
 # end = time.time()
 # print(end - start)
 
-ser1 = ser.Serial('/dev/ttyUSB1',9600)
+#ser1 = ser.Serial('/dev/ttyUSB1',9600)
 #ser1.write(str.encode('s'))
 
-
+class Data:
+    def __init__(self, x):
+        self.startime = 0
+        self.endtime = 0
+        self.cur_posx = 0
+        self.cur_posy = 0
+        self.sq_posx = 0
+        self.sq_posy = 0
+        self.sq_wid = 0
 
 
 class SampleApp(tk.Tk):
@@ -86,7 +94,7 @@ class PageTwo(tk.Frame):
         button2.pack()
         button4.pack()
     def create_squareframe(self):
-        targetsize = random.randint(20,200)
+        targetsize = random.randint(15,150)
         #targetsize = 20
         x_pos = random.randint(0,1910 - 65 -targetsize)
         y_pos = random.randint(0,1070- 25 - targetsize)
@@ -100,7 +108,7 @@ class PageTwo(tk.Frame):
         #self.square_frame.configure(background="blue")
         #self.square_frame.destroy()
     def on_enter(self, event):
-        print ('bzzzzzzzzzz~ ')
+        #print ('bzzzzzzzzzz~ ')
         ser1.write(str.encode('s'))
         #ser1.write('s')
     def removethis(self):
