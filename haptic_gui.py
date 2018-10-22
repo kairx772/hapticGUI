@@ -15,7 +15,7 @@ import time
 #ser1.write(str.encode('s'))
 
 class Data:
-    def __init__(self, x):
+    def __init__(self):
         self.startime = 0
         self.endtime = 0
         self.cur_posx = 0
@@ -23,6 +23,10 @@ class Data:
         self.sq_posx = 0
         self.sq_posy = 0
         self.sq_wid = 0
+
+
+
+data = Data()
 
 
 class SampleApp(tk.Tk):
@@ -108,14 +112,17 @@ class PageTwo(tk.Frame):
         #self.square_frame.configure(background="blue")
         #self.square_frame.destroy()
     def on_enter(self, event):
-        #print ('bzzzzzzzzzz~ ')
-        ser1.write(str.encode('s'))
+        print ('bzzzzzzzzzz~ ')
+        #ser1.write(str.encode('s'))
         #ser1.write('s')
     def removethis(self):
         self.square_frame.destroy()
     def removethis_sq(self):
         self.square_frame.configure(background="blue")
+        data.endtime = time.time()
+        print(data.endtime - data.startime)
     def creatthis(self):
+        data.startime = time.time()
         self.square_frame.destroy()
         self.create_squareframe()
 
