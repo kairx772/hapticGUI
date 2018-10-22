@@ -5,6 +5,9 @@ void setup()
   pinMode(MoPin,OUTPUT);
   digitalWrite(MoPin,LOW);  
   Serial.begin(9600);
+  //digitalWrite(MoPin,HIGH);
+  //delay(200);
+  //digitalWrite(MoPin,LOW);
 }
 
 void loop() 
@@ -14,7 +17,7 @@ void loop()
     if(Serial.read() == 's')
     {
       digitalWrite(MoPin,HIGH);
-      delay(100);
+      delay(200);
     }
   }
 
