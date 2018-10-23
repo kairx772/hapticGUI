@@ -3,9 +3,9 @@ import tkinter as tk
 from tkinter import font  as tkfont
 from random import randint, choice
 #import serial as ser
-#from Xlib import display
 import time
 import pyautogui
+import csv
 
 
 
@@ -31,7 +31,12 @@ class Data:
 data = Data()
 datalist = []
 
-
+def GenCSV(datalsit, exporfoldername):
+    with open(exporfoldername, 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['movtime', 'cur_posx','cur_posy' ,'sq_posx', 'sq_posy', 'sq_wid'])
+        for i in datalsit:
+            writer.writerow([str(i.movtime), str(i.cur_posx), str(i.cur_posy), str(i.sq_posx), str(i.sq_posy), str(i.sq_wid)])
 
 
 class SampleApp(tk.Tk):
@@ -161,18 +166,28 @@ class PageTwo(tk.Frame):
         datalist[-1].sq_posx = tarpos_x
         datalist[-1].sq_posy = tarpos_y
         datalist[-1].sq_wid = tar_size
-        print ('movtime:', datalist[-1].movtime, 'sq_posx:', datalist[-1].sq_posx, 'sq_posy:', datalist[-1].sq_posy, 'sq_wid:', datalist[-1].sq_wid)
+        datalist[-1].cur_posx = cur_starx
+        datalist[-1].cur_posy = cur_stary
+        print ('movtime:', datalist[-1].movtime, 
+            'sq_posx:', datalist[-1].sq_posx, 
+            'sq_posy:', datalist[-1].sq_posy, 
+            'sq_wid:', datalist[-1].sq_wid, 
+            'cur_posx:', datalist[-1].cur_posx,
+            'cur_posy:', datalist[-1].cur_posy)
     def creatthis(self):
-        #pyautogui.position()
-        print ('x:', pyautogui.position()[0], 'y:', pyautogui.position()[1])
+        #print ('x:', pyautogui.position()[0], 'y:', pyautogui.position()[1])
+        global cur_starx
+        global cur_stary
         global startime
         startime = time.time()
+        (cur_starx, cur_stary) = pyautogui.position()
         print ('start')
         print (startime)
         self.square_frame.destroy()
         self.create_squareframe()
     def backtostartframe(self):
         #controller.show_frame("StartPage")
+        GenCSV(datalist, 'tester')
         for i in datalist:
             print ('movtime:', i.movtime, 'sq_posx:', i.sq_posx, 'sq_posy:', i.sq_posy, 'sq_wid:', i.sq_wid)
 
