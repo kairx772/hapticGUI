@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import font  as tkfont
 from random import randint, choice
-#import serial as ser
+import serial as ser
 import time
 import pyautogui
 import csv
@@ -14,7 +14,7 @@ import csv
 # end = time.time()
 # print(end - start)
 
-#ser1 = ser.Serial('/dev/ttyUSB1',9600)
+ser1 = ser.Serial('/dev/ttyUSB0',9600)
 #ser1.write(str.encode('s'))
 
 class Data:
@@ -32,7 +32,7 @@ data = Data()
 datalist = []
 
 def GenCSV(datalsit, exporfoldername):
-    with open(exporfoldername, 'w') as csvfile:
+    with open(exporfoldername+'.ods', 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['movtime', 'cur_posx','cur_posy' ,'sq_posx', 'sq_posy', 'sq_wid'])
         for i in datalsit:
@@ -47,7 +47,7 @@ class SampleApp(tk.Tk):
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.geometry('1000x800')
         pad = 0
-        self.overrideredirect(1)
+        #self.overrideredirect(1)
         self.geometry("{0}x{1}+0+0".format(self.winfo_screenwidth()-pad, self.winfo_screenheight()-pad))
 
         # the container is where we'll stack a bunch of frames
@@ -84,12 +84,21 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="This is the start page", font=controller.title_font)
+        label = tk.Label(self, text="Say your name and press 'START'", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
-
-        button1 = tk.Button(self, text="Go to Page Two",
+        self.entry = tk.Entry(self)
+        self.entry.pack()
+        testername = self.entry.get()
+        button = tk.Button(self, text="Say my name", command=self.on_button)
+        #button2 = tk.Button(self, text="save name", command=lambda: testername = self.entry.get())
+        button1 = tk.Button(self, text="START",
                             command=lambda: controller.show_frame("PageTwo"))
+        button.pack()
         button1.pack()
+
+    def on_button(self):
+        global testername
+        testername = self.entry.get()
 
 class PageTwo(tk.Frame):
 
@@ -117,8 +126,10 @@ class PageTwo(tk.Frame):
         #targetsize = 20
         #x_pos = randint(0,1920 - targetsize)
         #y_pos = randint(0,1080- 25 - targetsize)
-        x_pos = (choice([randint(0,945-targetsize),randint(975,1920)]))
-        y_pos = (choice([randint(0,555-targetsize),randint(580,1080)]))
+        x_pos = (choice([randint(0,913-targetsize-65),randint(945,1920-targetsize-65)]))
+        y_pos = (choice([randint(0,548-targetsize),randint(570,1080-targetsize-24)]))
+        #x_pos = 1920-targetsize-65
+        #y_pos = 1080-targetsize-24
         global tarpos_x
         global tarpos_y
         tarpos_x = x_pos + (targetsize/2)
@@ -128,6 +139,7 @@ class PageTwo(tk.Frame):
         self.square_frame = tk.Frame(width=targetsize, height=targetsize, background='red')
         #self.square_frame.grid(column=0, row=0)
         self.square_frame.bind("<Enter>", self.on_enter)
+        self.square_frame.bind("<Leave>", self.on_leave)
         self.square_frame.bind("<Button-1>", lambda x:self.removethis_sq())
         self.square_frame.place(x = x_pos, y = y_pos)
         #self.square_frame.configure(background="blue")
@@ -146,7 +158,11 @@ class PageTwo(tk.Frame):
         self.save.pack(side="bottom", anchor="se", expand=True)
         #self.QUIT.pack()
     def on_enter(self, event):
+        ser1.write(str.encode('s'))
         print ('bzzzzzzzzzz~ ')
+    def on_leave(self, event):
+        ser1.write(str.encode('q'))
+        print ('mmmmmmmmmmmmmm~ ')
         #ser1.write(str.encode('s'))
         #ser1.write('s')
     def removethis(self):
@@ -166,8 +182,8 @@ class PageTwo(tk.Frame):
         datalist[-1].sq_posx = tarpos_x
         datalist[-1].sq_posy = tarpos_y
         datalist[-1].sq_wid = tar_size
-        datalist[-1].cur_posx = cur_starx
-        datalist[-1].cur_posy = cur_stary
+        datalist[-1].cur_posx = cur_starx -65
+        datalist[-1].cur_posy = cur_stary -24
         print ('movtime:', datalist[-1].movtime, 
             'sq_posx:', datalist[-1].sq_posx, 
             'sq_posy:', datalist[-1].sq_posy, 
@@ -187,9 +203,9 @@ class PageTwo(tk.Frame):
         self.create_squareframe()
     def backtostartframe(self):
         #controller.show_frame("StartPage")
-        GenCSV(datalist, 'tester')
-        for i in datalist:
-            print ('movtime:', i.movtime, 'sq_posx:', i.sq_posx, 'sq_posy:', i.sq_posy, 'sq_wid:', i.sq_wid)
+        GenCSV(datalist, testername)
+        # for i in datalist:
+        #     print ('movtime:', i.movtime, 'sq_posx:', i.sq_posx, 'sq_posy:', i.sq_posy, 'sq_wid:', i.sq_wid)
 
 if __name__ == "__main__":
     app = SampleApp()
