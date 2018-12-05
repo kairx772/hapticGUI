@@ -6,16 +6,15 @@ import serial as ser
 import time
 import pyautogui
 import csv
+import pandas as pd
 
-
-
-# start = time.time()
-# print("hello")
-# end = time.time()
-# print(end - start)
-
-ser1 = ser.Serial('/dev/ttyUSB0',115200)
+#ser1 = ser.Serial('/dev/ttyUSB0',115200)
 #ser1.write(str.encode('s'))
+try:
+    ser1 = ser.Serial('/dev/ttyUSB0',115200)
+except ser.serialutil.SerialException:
+    print('Arduino disconnect')
+
 
 class Data:
     def __init__(self):
@@ -25,8 +24,6 @@ class Data:
         self.sq_posx = 0
         self.sq_posy = 0
         self.sq_wid = 0
-
-
 
 data = Data()
 datalist = []
@@ -121,7 +118,7 @@ class PageTwo(tk.Frame):
         button4.pack()
     def create_squareframe(self):
         targetsize = randint(15,150)
-        targetsize = 1
+        #targetsize = 1
         global tar_size
         tar_size = targetsize
         #targetsize = 20
@@ -159,17 +156,26 @@ class PageTwo(tk.Frame):
         self.save.pack(side="bottom", anchor="se", expand=True)
         #self.QUIT.pack()
     def on_enter(self, event):
-        ser1.write(str.encode('s'))
-        print ('bzzzzzzzzzz~ ')
+        try:
+            ser1.write(str.encode('s'))
+        except NameError:
+            print ('bzzzzzzzzzz~ ')
     def on_leave(self, event):
-        ser1.write(str.encode('q'))
-        print ('mmmmmmmmmmmmmm~ ')
+        try:
+            ser1.write(str.encode('q'))
+        except NameError:
+            print ('mmmmmmmmmmmmmm~ ')
+        #ser1.write(str.encode('q'))
+        #print ('mmmmmmmmmmmmmm~ ')
         #ser1.write(str.encode('s'))
         #ser1.write('s')
     def removethis(self):
         self.square_frame.destroy()
     def removethis_sq(self):
-        ser1.write(str.encode('q'))
+        try:
+            ser1.write(str.encode('q'))
+        except NameError:
+            print ('mmmmmmmmmmmmmm~ ')
         self.square_frame.configure(background="blue")
         endtime = time.time()
         print('end')
