@@ -14,7 +14,7 @@ import csv
 # end = time.time()
 # print(end - start)
 
-ser1 = ser.Serial('/dev/ttyUSB0',9600)
+ser1 = ser.Serial('/dev/ttyUSB0',115200)
 #ser1.write(str.encode('s'))
 
 class Data:
@@ -84,12 +84,12 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Say your name and press 'START'", font=controller.title_font)
+        label = tk.Label(self, text="Save your name and press 'START'", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         self.entry = tk.Entry(self)
         self.entry.pack()
         testername = self.entry.get()
-        button = tk.Button(self, text="Say my name", command=self.on_button)
+        button = tk.Button(self, text="Save name", command=self.on_button)
         #button2 = tk.Button(self, text="save name", command=lambda: testername = self.entry.get())
         button1 = tk.Button(self, text="START",
                             command=lambda: controller.show_frame("PageTwo"))
@@ -121,6 +121,7 @@ class PageTwo(tk.Frame):
         button4.pack()
     def create_squareframe(self):
         targetsize = randint(15,150)
+        targetsize = 1
         global tar_size
         tar_size = targetsize
         #targetsize = 20
@@ -168,6 +169,7 @@ class PageTwo(tk.Frame):
     def removethis(self):
         self.square_frame.destroy()
     def removethis_sq(self):
+        ser1.write(str.encode('q'))
         self.square_frame.configure(background="blue")
         endtime = time.time()
         print('end')
@@ -184,12 +186,12 @@ class PageTwo(tk.Frame):
         datalist[-1].sq_wid = tar_size
         datalist[-1].cur_posx = cur_starx -65
         datalist[-1].cur_posy = cur_stary -24
-        print ('movtime:', datalist[-1].movtime, 
-            'sq_posx:', datalist[-1].sq_posx, 
-            'sq_posy:', datalist[-1].sq_posy, 
-            'sq_wid:', datalist[-1].sq_wid, 
-            'cur_posx:', datalist[-1].cur_posx,
-            'cur_posy:', datalist[-1].cur_posy)
+        # print ('movtime:', datalist[-1].movtime, 
+        #     'sq_posx:', datalist[-1].sq_posx, 
+        #     'sq_posy:', datalist[-1].sq_posy, 
+        #     'sq_wid:', datalist[-1].sq_wid, 
+        #     'cur_posx:', datalist[-1].cur_posx,
+        #     'cur_posy:', datalist[-1].cur_posy)
     def creatthis(self):
         #print ('x:', pyautogui.position()[0], 'y:', pyautogui.position()[1])
         global cur_starx
