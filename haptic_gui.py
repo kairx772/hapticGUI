@@ -8,13 +8,10 @@ import pyautogui
 import csv
 import pandas as pd
 
-#ser1 = ser.Serial('/dev/ttyUSB0',115200)
-#ser1.write(str.encode('s'))
 try:
     ser1 = ser.Serial('/dev/ttyUSB0',115200)
 except ser.serialutil.SerialException:
     print('Arduino disconnect')
-
 
 class Data:
     def __init__(self):
@@ -27,6 +24,11 @@ class Data:
 
 data = Data()
 datalist = []
+
+#baredgex = 65
+#baredgey = 24
+baredgex = 0
+baredgey = 0
 
 def GenCSV(datalsit, exporfoldername):
     with open(exporfoldername+'.ods', 'w') as csvfile:
@@ -44,7 +46,7 @@ class SampleApp(tk.Tk):
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.geometry('1000x800')
         pad = 0
-        #self.overrideredirect(1)
+        self.overrideredirect(1)
         self.geometry("{0}x{1}+0+0".format(self.winfo_screenwidth()-pad, self.winfo_screenheight()-pad))
 
         # the container is where we'll stack a bunch of frames
@@ -124,8 +126,8 @@ class PageTwo(tk.Frame):
         #targetsize = 20
         #x_pos = randint(0,1920 - targetsize)
         #y_pos = randint(0,1080- 25 - targetsize)
-        x_pos = (choice([randint(0,913-targetsize-65),randint(945,1920-targetsize-65)]))
-        y_pos = (choice([randint(0,548-targetsize),randint(570,1080-targetsize-24)]))
+        x_pos = (choice([randint(0,913-targetsize-baredgex),randint(945,1920-targetsize-baredgex)]))
+        y_pos = (choice([randint(0,548-targetsize),randint(570,1080-targetsize-baredgey)]))
         #x_pos = 1920-targetsize-65
         #y_pos = 1080-targetsize-24
         global tarpos_x
@@ -190,8 +192,8 @@ class PageTwo(tk.Frame):
         datalist[-1].sq_posx = tarpos_x
         datalist[-1].sq_posy = tarpos_y
         datalist[-1].sq_wid = tar_size
-        datalist[-1].cur_posx = cur_starx -65
-        datalist[-1].cur_posy = cur_stary -24
+        datalist[-1].cur_posx = cur_starx - baredgex
+        datalist[-1].cur_posy = cur_stary - baredgey
         # print ('movtime:', datalist[-1].movtime, 
         #     'sq_posx:', datalist[-1].sq_posx, 
         #     'sq_posy:', datalist[-1].sq_posy, 
