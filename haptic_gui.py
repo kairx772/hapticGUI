@@ -46,7 +46,8 @@ class SampleApp(tk.Tk):
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.geometry('1000x800')
         pad = 0
-        self.overrideredirect(1)
+        #self.overrideredirect(True)
+        self.attributes('-fullscreen', True)
         self.geometry("{0}x{1}+0+0".format(self.winfo_screenwidth()-pad, self.winfo_screenheight()-pad))
 
         # the container is where we'll stack a bunch of frames
@@ -61,8 +62,6 @@ class SampleApp(tk.Tk):
         self.frames = {}
         for F in (StartPage, PageTwo):
             page_name = F.__name__
-            print (F)
-            print(type(F))
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
 
@@ -167,10 +166,6 @@ class PageTwo(tk.Frame):
             ser1.write(str.encode('q'))
         except NameError:
             print ('mmmmmmmmmmmmmm~ ')
-        #ser1.write(str.encode('q'))
-        #print ('mmmmmmmmmmmmmm~ ')
-        #ser1.write(str.encode('s'))
-        #ser1.write('s')
     def removethis(self):
         self.square_frame.destroy()
     def removethis_sq(self):
