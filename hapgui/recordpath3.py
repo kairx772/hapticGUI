@@ -1,5 +1,5 @@
 import struct
-import serial as ser
+import serial
 import time
 import pandas as pd
 import numpy as np
@@ -27,13 +27,14 @@ class mouevt():
 
 class getMouEvt():
 
-    def __init__(self, mouevtfile):
+    def __init__(self, mouevtfile, serialport):
         # threading.Thread.__init__(self)
         # self.threadID = threadID
         # self.name = name
         # self.counter = counter
         ft = time.time() 
         self.file = mouevtfile #open( "/dev/input/mice", "rb" )
+        self.ser = serialport
         print ("sttime: %f" %(time.time()-ft))
         self.evtn = 0
         self.evtque = [None]*10
@@ -80,20 +81,23 @@ class getMouEvt():
         self.cur_y.append(self.mevt.pixxy[1])
 
         try:
-            ser1.write(str.encode('d'))
+            self.ser.write(str.encode('d'))
         except NameError:
+            print ('Send "d" to serial')
+        except AttributeError:
             print ('Send "d" to serial')
 
 class Counter(object):
 
-    def __init__(self, name, mouevtfile):
+    def __init__(self, name, mouevtfile, serialport):
         self.name = name
         self.number = 0
         self.running = False
         self.file = mouevtfile
+        self.ser = serialport
 
     def start(self):
-        gmd = getMouEvt(self.file)
+        gmd = getMouEvt(self.file, self.ser)
         mouevtdata = pd.DataFrame()
         self.running = True
         datalist = []
@@ -121,12 +125,13 @@ class Counter(object):
 class Cmd(object):
     t = None
     counter = None
-    def __init__(self, name, mouevtfile):
+    def __init__(self, name, mouevtfile, serialport):
         self.name = name
         self.file = mouevtfile
+        self.ser = serialport
  
     def start(self):
-        self.counter = Counter(self.name, self.file)
+        self.counter = Counter(self.name, self.file, self.ser)
         self.t = threading.Thread(target=self.counter.start)
         self.t.start()
 
@@ -141,12 +146,14 @@ class Cmd(object):
 
 if __name__ == "__main__":
     try:
-        ser1 = ser.Serial('/dev/ttyUSB2',115200)
-    except ser.serialutil.SerialException:
+        ser1 = serial.Serial('/dev/ttyUSB0',115200)
+    except serial.serialutil.SerialException:
         print('Arduino disconnect')
+        ser1 = None
+
 
     file = open( "/dev/input/mice", "rb" ) 
-    cmd = Cmd('test', file)
+    cmd = Cmd('test', file, ser1)
     print ("Starting")
     cmd.start()
     sleep(3)
